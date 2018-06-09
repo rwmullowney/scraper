@@ -24,6 +24,8 @@ module.exports = function (app) {
             var result = {}
 
             $("div.fte_features").each(function (i, element) {
+
+                // Assigns the article title, image, and link to their appropriate variables
                 var title = $(element).find("h2.article-title").text().trim();
                 var img = $(element).find("img").attr("src");
                 var link = $(element).attr("data-href");
@@ -33,23 +35,24 @@ module.exports = function (app) {
                     img = "no image to show"
                 };
 
-                // Stops any non-articles from being added
+                // Stops any non-articles (such as podcast notifications) from being added
                 if (title === "") {
                     return;
                 };
 
+                // Adds relevant article information to the result object before submission
                 result.title = title;
                 result.img = img;
                 result.link = link;
 
-                // console.log(results)
+                // Sends the result object to the database
                 db.Article.create(result)
-                .then(function (dbArticle) {
-                    console.log(dbArticle);
-                })
-                .catch(function (err) {
-                    return res.json(err);
-                })
+                    .then(function (dbArticle) {
+                        console.log(dbArticle);
+                    })
+                    .catch(function (err) {
+                        return res.json(err);
+                    });
             });
         });
     });
