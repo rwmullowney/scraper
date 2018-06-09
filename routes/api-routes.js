@@ -15,22 +15,17 @@ module.exports = function (app) {
 
         console.log("outside the cheerio test")
         // Making a request to the AP News homepage
-        request("https://www.apnews.com/", function (error, response, html) {
+        request("https://fivethirtyeight.com/politics/", function (error, response, html) {
 
             // Load HTML into cheerio and save to variable
             var $ = cheerio.load(html);
 
             // Array to save scraped data
-            var results = [];
+            var results = []
 
-            $("h3.contentTitle").each(function(i, element) {
-
-                console.log("inside the h3 function");
-
-                var title = $(element).text();
-
-                console.log(title);
-
+            $("h2.article-title").each(function (i, element) {
+                var title = $(element).text().trim();
+                console.log(title)
             });
 
         });
