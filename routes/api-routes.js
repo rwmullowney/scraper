@@ -21,15 +21,37 @@ module.exports = function (app) {
             var $ = cheerio.load(html);
 
             // Array to save scraped data
-            var results = []
+            var result = {}
 
-            $("h2.article-title").each(function (i, element) {
-                var title = $(element).text().trim();
-                console.log(title)
+            $("div.fte_features").each(function (i, element) {
+                var title = $(element).find("h2.article-title").text().trim();
+                var img = $(element).find("img").attr("src");
+                var link = $(element).attr("data-href");
+
+                // Say there is no image to show if undefined
+                if (img == null) {
+                    img = "no image to show"
+                };
+
+                // Stops any non-articles from being added
+                if (title === "") {
+                    return;
+                };
+
+                result.title = title;
+                result.img = img;
+                result.link = link;
+
+                // console.log(results)
+                db.Article.create(result)
+                .then(function (dbArticle) {
+                    console.log(dbArticle);
+                })
+                .catch(function (err) {
+                    return res.json(err);
+                })
             });
-
         });
-
     });
 
 

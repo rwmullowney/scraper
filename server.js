@@ -29,7 +29,7 @@ require("./routes/api-routes.js")(app);
 require("./routes/html-routes.js")(app);
 
 // Connect to Mongo DB
-mongoose.connect("mongodb://localhost/mongo-scraper");
+mongoose.connect("mongodb://localhost/538-scraper");
 
 
 // Start the server
