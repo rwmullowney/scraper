@@ -13,17 +13,23 @@ module.exports = function (app) {
 
         // Render the handlebars
         res.render("index");
-
-        // Grab all the articles currently in the db
-        db.Article.find({})
-        .then(function(Article){
-            // console.log(Article);
-        })
-        .catch(function (err) {
-            // console.log(err);
-        });
-
     });
+
+
+    app.get("/api/scrapedArticles", (req, res) => {
+                // Grab all the articles currently in the db
+                db.Article.find({})
+                .then(function(Article){
+                    res.json(Article);
+                    
+                    // The below works when above the .html line above.  Why?
+                    // console.log("beneath headlines")
+                })
+                .catch(function (err) {
+                    res.json(err);
+                });
+
+    })
 
 
     // Scrape the NPR page
@@ -68,6 +74,7 @@ module.exports = function (app) {
                     db.Article.create(result)
                         .then(function (dbArticle) {
                             // console.log(dbArticle);
+                            console.log("Successfully scraped!")
                         })
                         .catch(function (err) {
                             return res.json(err);
