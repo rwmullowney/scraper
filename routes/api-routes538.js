@@ -15,7 +15,7 @@ module.exports = function (app) {
 
         console.log("outside the cheerio test")
         // Making a request to the AP News homepage
-        request("https://www.npr.org/sections/politics/", function (error, response, html) {
+        request("https://fivethirtyeight.com/politics/", function (error, response, html) {
 
             // Load HTML into cheerio and save to variable
             var $ = cheerio.load(html);
@@ -23,15 +23,12 @@ module.exports = function (app) {
             // Array to save scraped data
             var result = {}
 
-            $("article.has-image").each(function (i, element) {
+            $("div.fte_features").each(function (i, element) {
 
                 // Assigns the article title, image, and link to their appropriate variables
-                var title = $(element).find("h2.title").find("a").text().trim();
-                var summary = $(element).find("p.teaser").text();
-                var link = $(element).find("a").attr("href");
-                // TODO: This is scraping a lower-quality jpg for some reason.  Either try to scrape the higher quality
-                // one or see if you can modify the url before adding it to your result object
-                var img = $(element).find("div.imagewrap").find("a"). find("img").attr("src");
+                var title = $(element).find("h2.article-title").text().trim();
+                var img = $(element).find("img").attr("src");
+                var link = $(element).attr("data-href");
 
                 // Say there is no image to show if undefined
                 if (img == null) {
@@ -45,11 +42,9 @@ module.exports = function (app) {
 
                 // Adds relevant article information to the result object before submission
                 result.title = title;
-                result.summary = summary;
-                result.link = link;
                 result.img = img;
+                result.link = link;
 
-                console.log(result)
                 // Sends the result object to the database
                 db.Article.create(result)
                     .then(function (dbArticle) {
